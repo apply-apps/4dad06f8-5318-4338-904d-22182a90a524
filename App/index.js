@@ -30,18 +30,18 @@ const SnakeGame = () => {
                     y: prevSnake[0].y + direction.y,
                 };
 
-                // Check if snake collides with walls
+                // Check if the snake collides with walls
                 if (
-                    newHead.x < 0 ||
-                    newHead.x >= NUM_CELLS_WIDTH ||
-                    newHead.y < 0 ||
+                    newHead.x < 0 || 
+                    newHead.x >= NUM_CELLS_WIDTH || 
+                    newHead.y < 0 || 
                     newHead.y >= NUM_CELLS_HEIGHT
                 ) {
                     setIsGameOver(true);
                     return prevSnake;
                 }
 
-                // Check if snake collides with itself
+                // Check if the snake collides with itself
                 if (prevSnake.some(cell => cell.x === newHead.x && cell.y === newHead.y)) {
                     setIsGameOver(true);
                     return prevSnake;
@@ -75,66 +75,60 @@ const SnakeGame = () => {
     };
 
     return (
-        <View style={styles.gameContainer}>
+        <View style={styles.container}>
             {isGameOver ? (
                 <Button title="Game Over! Restart?" onPress={restartGame} />
             ) : (
-                <View style={styles.grid}>
-                    {snake.map((cell, index) => (
-                        <View key={index} style={[styles.cell, {
-                            left: cell.x * CELL_SIZE,
-                            top: cell.y * CELL_SIZE,
-                        }]} />
-                    ))}
-                    <View style={[styles.food, {
-                        left: food.x * CELL_SIZE,
-                        top: food.y * CELL_SIZE,
-                    }]} />
-                </View>
+                <>
+                    <View style={styles.grid}>
+                        {snake.map((cell, index) => (
+                            <View 
+                                key={index} 
+                                style={[
+                                    styles.cell, 
+                                    { left: cell.x * CELL_SIZE, top: cell.y * CELL_SIZE }
+                                ]}
+                            />
+                        ))}
+                        <View 
+                            style={[
+                                styles.food, 
+                                { left: food.x * CELL_SIZE, top: food.y * CELL_SIZE }
+                            ]}
+                        />
+                    </View>
+                    <View style={styles.controls}>
+                        <TouchableOpacity style={styles.controlButton} onPress={() => handleSwipe(0, -1)}>
+                            <View style={styles.controlArrow} />
+                        </TouchableOpacity>
+                        <View style={styles.controlRow}>
+                            <TouchableOpacity style={styles.controlButton} onPress={() => handleSwipe(-1, 0)}>
+                                <View style={[styles.controlArrow, styles.leftArrow]} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.controlButton} onPress={() => handleSwipe(1, 0)}>
+                                <View style={[styles.controlArrow, styles.rightArrow]} />
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity style={styles.controlButton} onPress={() => handleSwipe(0, 1)}>
+                            <View style={[styles.controlArrow, styles.downArrow]} />
+                        </TouchableOpacity>
+                    </View>
+                </>
             )}
-            <View style={styles.controls}>
-                <TouchableOpacity style={styles.controlButton} onPress={() => handleSwipe(0, -1)}>
-                    <View style={styles.controlArrow} />
-                </TouchableOpacity>
-                <View style={styles.controlRow}>
-                    <TouchableOpacity style={styles.controlButton} onPress={() => handleSwipe(-1, 0)}>
-                        <View style={[styles.controlArrow, styles.leftArrow]} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.controlButton} onPress={() => handleSwipe(1, 0)}>
-                        <View style={[styles.controlArrow, styles.rightArrow]} />
-                    </TouchableOpacity>
-                </View>
-                <TouchableOpacity style={styles.controlButton} onPress={() => handleSwipe(0, 1)}>
-                    <View style={[styles.controlArrow, styles.downArrow]} />
-                </TouchableOpacity>
-            </View>
         </View>
     );
 };
 
-export default function App() {
-    return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar hidden />
-            <SnakeGame />
-        </SafeAreaView>
-    );
-}
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    gameContainer: {
-        flex: 1,
     },
     grid: {
         position: 'relative',
         width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height - 120,
+        height: Dimensions.get('window').height - 200, // Adjusted to make space for controls
         backgroundColor: '#000',
     },
     cell: {
@@ -150,10 +144,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
     },
     controls: {
-        flexDirection: 'column',
+        position: 'absolute',
+        bottom: 20,
         alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 20,
     },
     controlRow: {
         flexDirection: 'row',
@@ -182,3 +175,23 @@ const styles = StyleSheet.create({
         transform: [{ rotate: '180deg' }],
     },
 });
+
+const App = () => {
+    return (
+        <SafeAreaView style={appStyles.container}>
+            <StatusBar hidden />
+            <SnakeGame />
+        </SafeAreaView>
+    );
+}
+
+const appStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#000',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
+
+export default App;
